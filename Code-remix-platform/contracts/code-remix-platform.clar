@@ -90,3 +90,69 @@
     { project-id: uint }
     { star-count: uint }
 )
+
+;; Read-only functions
+;; #[allow(unchecked_data)]
+(define-read-only (get-project (project-id uint))
+    (map-get? projects { project-id: project-id })
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-remix (remix-id uint))
+    (map-get? remixes { remix-id: remix-id })
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-developer-profile (developer principal))
+    (map-get? developer-profiles { developer: developer })
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (has-upvoted (project-id uint) (upvoter principal))
+    (default-to false (get upvoted (map-get? project-upvotes { project-id: project-id, upvoter: upvoter })))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (has-upvoted-remix (remix-id uint) (upvoter principal))
+    (default-to false (get upvoted (map-get? remix-upvotes { remix-id: remix-id, upvoter: upvoter })))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-total-projects)
+    (ok (var-get total-projects))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-total-remixes)
+    (ok (var-get total-remixes))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-total-comments)
+    (ok (var-get total-comments))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-platform-fee)
+    (ok (var-get platform-fee))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-project-comment (comment-id uint))
+    (map-get? project-comments { comment-id: comment-id })
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-collaborator-status (project-id uint) (collaborator principal))
+    (map-get? project-collaborators { project-id: project-id, collaborator: collaborator })
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-project-stars (project-id uint))
+    (default-to u0 (get star-count (map-get? project-stars { project-id: project-id })))
+)
+
+;; #[allow(unchecked_data)]
+(define-read-only (get-tag-stats (tag (string-ascii 30)))
+    (map-get? project-tags { tag: tag })
+)
