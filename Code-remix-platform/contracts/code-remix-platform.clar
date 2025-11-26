@@ -355,3 +355,78 @@
         ))
     )
 )
+
+;; #[allow(unchecked_data)]
+(define-public (lock-project (project-id uint))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { is-locked: true })
+        ))
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (unlock-project (project-id uint))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { is-locked: false })
+        ))
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (update-platform-fee (new-fee uint))
+    (begin
+        (asserts! (is-eq tx-sender contract-owner) err-unauthorized)
+        (var-set platform-fee new-fee)
+        (ok true)
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (update-project-title (project-id uint) (new-title (string-ascii 100)))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { title: new-title })
+        ))
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (update-project-description (project-id uint) (new-description (string-ascii 500)))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { description: new-description })
+        ))
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (update-project-repo (project-id uint) (new-repo-uri (string-ascii 256)))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { repo-uri: new-repo-uri })
+        ))
+    )
+)
+
+;; #[allow(unchecked_data)]
+(define-public (update-project-tags (project-id uint) (new-tags (string-ascii 100)))
+    (let ((project (unwrap! (map-get? projects { project-id: project-id }) err-not-found)))
+        (asserts! (is-eq tx-sender (get creator project)) err-unauthorized)
+        (ok (map-set projects
+            { project-id: project-id }
+            (merge project { tags: new-tags })
+        ))
+    )
+)
